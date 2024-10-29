@@ -20,7 +20,6 @@ const initialState: EventsState = {
   error: null,
 };
 
-// Create async thunk for fetching events
 export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
   const response = await axios.get<Event[]>('https://jsonplaceholder.typicode.com/todos');
   return response.data;
@@ -30,7 +29,6 @@ const eventsSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
-    // You can remove these if not using them yet
     addEvent: (state, action: PayloadAction<Event>) => {
       state.events.push(action.payload);
     },
@@ -58,8 +56,5 @@ const eventsSlice = createSlice({
   },
 });
 
-// Export actions
 export const { addEvent, removeEvent, setEvents } = eventsSlice.actions;
-
-// Export reducer
 export default eventsSlice.reducer;

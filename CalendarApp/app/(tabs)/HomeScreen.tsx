@@ -7,14 +7,14 @@ import { ThemedView } from '@/components/ThemedView';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEvents } from '../store/eventsSlice';
-import { RootState } from '../store/store'; // Import your RootState type
+import { RootState } from '../store/store';
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const { events, loading, error } = useSelector((state: RootState) => state.events);
 
   useEffect(() => {
-    dispatch(fetchEvents() as any); // Type assertion if necessary
+    dispatch(fetchEvents() as any);
   }, [dispatch]);
 
   return (
@@ -35,7 +35,7 @@ export default function HomeScreen() {
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : error ? (
-          <ThemedText type="subtitle">{error}</ThemedText> // Change 'body' to 'subtitle' or another type
+          <ThemedText type="subtitle">{error}</ThemedText>
         ) : (
           <Calendar
             onDayPress={(day: DateData) => {
