@@ -1,60 +1,48 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-interface Event {
-  userId: number;
+interface Todo {
   id: number;
-  title: string;
+  todo: string;
   completed: boolean;
+  userId: number;
 }
-
 interface EventsState {
-  events: Event[];
+  todos: Todo[];
   loading: boolean;
   error: string | null;
 }
-
 const initialState: EventsState = {
-  events: [],
+  todos: [],
   loading: false,
   error: null,
 };
-
-export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
-  const response = await axios.get<Event[]>('https://jsonplaceholder.typicode.com/todos');
-  return response.data;
-});
+export const fetchTodos = createAsyncThunk<Todo[], number>(
+  'events/fetchTodos',
+  async (page: number) => {
+    const response = await axios.get(`https://dummyjson.com/todos?limit=10&skip=${(page - 1) * 10}`);
+    return response.data.todos;
+  }
+);
 
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
-  reducers: {
-    addEvent: (state, action: PayloadAction<Event>) => {
-      state.events.push(action.payload);
-    },
-    removeEvent: (state, action: PayloadAction<number>) => {
-      state.events = state.events.filter(event => event.id !== action.payload);
-    },
-    setEvents: (state, action: PayloadAction<Event[]>) => {
-      state.events = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchEvents.pending, (state) => {
+      .addCase(fetchTodos.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchEvents.fulfilled, (state, action: PayloadAction<Event[]>) => {
+      .addCase(fetchTodos.fulfilled, (state, action: PayloadAction<Todo[]>) => {
         state.loading = false;
-        state.events = action.payload;
+        state.todos = action.payload;
       })
-      .addCase(fetchEvents.rejected, (state, action) => {
+      .addCase(fetchTodos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch events';
+        state.error = action.error.message || 'Failed to fetch todos';
       });
   },
 });
-
-export const { addEvent, removeEvent, setEvents } = eventsSlice.actions;
 export default eventsSlice.reducer;
