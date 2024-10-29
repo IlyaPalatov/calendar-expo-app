@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View, Button } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { fetchTodos } from './store/eventsSlice';
@@ -20,6 +20,7 @@ const HomeScreen: React.FC = () => {
   const todos = useAppSelector((state: RootState) => state.events.todos);
   const loading = useAppSelector((state: RootState) => state.events.loading);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [filter, setFilter] = useState<'all' | 'completed' | 'inProcess'>('all');
 
   const fetchEventList = () => {
     dispatch(fetchTodos(currentPage));
@@ -33,6 +34,11 @@ const HomeScreen: React.FC = () => {
     const newPage = month.month;
     setCurrentPage(newPage);
   };
+    const filteredTodos = todos.filter((todo: Event) => {
+    if (filter === 'completed') return todo.completed;
+    if (filter === 'inProcess') return !todo.completed;
+    return true; // 'all'
+  });
 
   return (
     <ParallaxScrollView
@@ -56,8 +62,14 @@ const HomeScreen: React.FC = () => {
           }}
         />
       </ThemedView>
+      <ThemedText type='title' style={styles.titleTask}>Your Tasks</ThemedText>
+      <View style={styles.filterContainer}>
+        <Button  title="All" onPress={() => setFilter('all')} />
+        <Button  title="Completed" onPress={() => setFilter('completed')} />
+        <Button  title="In Process" onPress={() => setFilter('inProcess')} />
+      </View>
       {loading && <ThemedText type="subtitle">Loading events...</ThemedText>}
-      {!loading && todos.map((todo: Event) => (
+      {!loading && filteredTodos.map((todo: Event) => (
         <ThemedText key={todo.id} style={styles.todoList} type="default">{todo.todo}</ThemedText>
       ))}
     </ParallaxScrollView>
@@ -76,8 +88,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 16,
   },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+    gap:5,
+  },
   todoList: {
-    textAlign:"center",
+    textAlign: "center",
+  },
+  titleTask: {
+    textAlign:'center',
   },
   reactLogo: {
     height: 178,
