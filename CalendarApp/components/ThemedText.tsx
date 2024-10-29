@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ThemedText };
+export default ThemedText;
