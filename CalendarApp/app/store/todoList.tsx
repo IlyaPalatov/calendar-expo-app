@@ -18,7 +18,7 @@ interface TodoListProps {
   });
 
   if (loading) {
-    return <ThemedText type="subtitle">Loading todos...</ThemedText>;
+    return <ThemedText type="subtitle" style={styles.txtLoadingToDo}>Loading todos...</ThemedText>;
   }
 
   if (error) {
@@ -38,7 +38,10 @@ interface TodoListProps {
 const styles = StyleSheet.create({
     todoList:{
         textAlign:'center',
-    },
+  },
+  txtLoadingToDo:{
+    textAlign:'center',
+  },
 })
 
 export default TodoList;

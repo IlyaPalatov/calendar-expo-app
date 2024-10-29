@@ -24,7 +24,7 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <Suspense fallback={<View><ThemedText type="subtitle">Loading...</ThemedText></View>}>
+    <Suspense fallback={<View><ThemedText type="subtitle" style={styles.loadingTxt}>Loading...</ThemedText></View>}>
       <ParallaxScrollView
         headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
         headerImage={
@@ -82,6 +82,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  loadingTxt: {
+    textAlign:'center',
   },
 });
 
